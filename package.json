@@ -1,0 +1,24 @@
+{
+  "name": "mq_tools",
+  "version": "0.0.1",
+  "description": "梦起配置文件转化工具",
+  "author": {
+    "name": "wht",
+    "email": "215132668@qq.com",
+    "url": "https://github.com/itrookie-sky"
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mq"
+  ],
+  "license": "ISC",
+  "bin": {
+    "mqconf": "index.js"
+  },
+  "engines": {
+    "node": ">=10"
+  }
+}
