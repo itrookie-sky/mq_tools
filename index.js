@@ -22,7 +22,7 @@ if (process.argv.length === 2) {
 
 program
   .option("-p, --path <pathName>", "指定路径")
-  .option("-ev --envVersion <env> <version>", "指定evn和版本号")
+  .option("-cv --configVersion <version>", "指定配置版本号")
   .option("-v, --packageVersion", "显示本工具版本号")
   .on("--help", () => {
     console.log();
@@ -36,10 +36,9 @@ if (program.path) {
   // addVersion("Zeus", "common", "1", "local", "1.0.0", '["a","b"]');
 } else if (program.packageVersion) {
   showPackageVerion();
-} else if (program.envVersion) {
-  let env = program.envVersion;
-  let version = program.args[0];
-  addConfig(null, env, version);
+} else if (program.configVersion) {
+  let version = program.configVersion;
+  addConfig(null, null, version);
 }
 
 /**

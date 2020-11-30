@@ -1,6 +1,6 @@
 {
   "name": "mq_tools",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "梦起配置文件转化工具",
   "author": {
     "name": "wht",
@@ -12,7 +12,7 @@
     "test": "node index.js -p ../mq_conf_test",
     "help": "node index.js --help",
     "release": "node index.js -p ../mq_config",
-    "ev": "node index.js -ev local 1.0.0"
+    "ver": "node index.js -cv 1.0.0"
   },
   "keywords": [
     "mq"
