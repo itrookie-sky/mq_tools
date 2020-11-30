@@ -1,5 +1,19 @@
-const https = require("https");
+var requestLib = require("request");
 const querystring = require("querystring");
+const chalk = require("chalk");
+
+/**
+ * 参数清理空value的key
+ * @param {object} obj
+ */
+function getParams(obj) {
+  if (!obj) return;
+  for (let key in obj) {
+    let cur = obj[key];
+    if (cur === null || cur === undefined) delete obj[key];
+  }
+  return obj;
+}
 
 /**
  * 发送请求
@@ -9,9 +23,11 @@ const querystring = require("querystring");
  * @returns {Promise}
  */
 function request(url, method = "POST", data = {}, headers) {
+  getParams(data);
+
   return new Promise((resolve, reject) => {
     let json = JSON.stringify(data);
-    method = method.toLowerCase();
+    method = method.toUpperCase();
 
     if (method == "GET") {
       if (url.indexOf("?") < 0) url += "?";
@@ -21,8 +37,8 @@ function request(url, method = "POST", data = {}, headers) {
     const options = {
       method: method,
       headers: {
+        Accept: "*/*",
         "Content-Type": "application/json",
-        "Content-Length": json.length,
       },
     };
 
@@ -35,20 +51,22 @@ function request(url, method = "POST", data = {}, headers) {
       }
     }
 
-    const req = https.request(url, options, (res) => {
-      //   console.log(`status_code:${res.statusCode}`);
+    function handler(err, resp, body) {
+      console.error("error:", err); // Print the error if one occurred
+      console.log("statusCode:", resp && resp.statusCode); // Print the response status code if a response was received
+      console.log("body:", body);
+      if (!err && resp.statusCode == 200) {
+        resolve(body);
+      } else {
+        reject(err);
+      }
+    }
 
-      res.on("data", (d) => {
-        resolve(JSON.parse(d.toString()));
-      });
-    });
-
-    req.on("error", (error) => {
-      reject(error);
-    });
-
-    req.write(json);
-    req.end();
+    if (method == "GET") {
+      requestLib(url, handler);
+    } else if (method == "POST") {
+      requestLib.post(url, { headers: options.headers, json: data }, handler);
+    }
   });
 }
 
@@ -60,7 +78,20 @@ function request(url, method = "POST", data = {}, headers) {
  * @returns {Promise}
  */
 function post(url, data, headers) {
-  return request(url, "post", data, headers);
+  return new Promise((resolve) => {
+    console.log("requrest>>>", chalk.blue(JSON.stringify(data)));
+    request(url, "post", data, headers)
+      .then((resp) => {
+        let code = resp.code;
+        if (code == 0) {
+          console.log("response<<<", chalk.green(JSON.stringify(resp)));
+        } else {
+          console.log("response<<<", chalk.red(JSON.stringify(resp)));
+        }
+        resolve(resp);
+      })
+      .catch(() => {});
+  });
 }
 
 /**

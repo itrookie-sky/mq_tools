@@ -9,7 +9,10 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node index.js -p ../mq_conf_test",
+    "help": "node index.js --help",
+    "release": "node index.js -p ../mq_config",
+    "ev": "node index.js -ev local 1.0.0"
   },
   "keywords": [
     "mq"
@@ -20,5 +23,10 @@
   },
   "engines": {
     "node": ">=10"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "commander": "^6.2.0",
+    "request": "^2.88.2"
   }
 }
