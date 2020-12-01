@@ -86,6 +86,8 @@ async function addConfig(subDir, env, version) {
   env = env || "local";
   version = version || "1.0.0";
 
+  envs = ["local", "hz", "union", "pre", "prod"];
+
   for (let space in node) {
     let spaceObj = node[space];
     await addNameSpace(space);
@@ -98,8 +100,11 @@ async function addConfig(subDir, env, version) {
         let server = path.basename(json, ".json");
         let data = fs.readFileSync(jsonPath, "utf8");
         await addServer(space, app, server);
-        await addEnv(space, app, server, env);
-        await addVersion(space, app, server, env, version, data);
+        for (let i = 0; i < envs.length; i++) {
+          let v = envs[i];
+          await addEnv(space, app, server, v);
+          await addVersion(space, app, server, v, version, data);
+        }
       }
     }
   }
