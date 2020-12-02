@@ -7,6 +7,7 @@ const {
   addNameSpace,
   addServer,
   addVersion,
+  updateVersion,
 } = require("./api");
 const { program } = require("commander");
 const fs = require("fs");
@@ -22,6 +23,7 @@ if (process.argv.length === 2) {
 
 program
   .option("-p, --path <pathName>", "指定路径")
+  .option("-up, --update <pathName>", "指定路径更新")
   .option("-cv --configVersion <version>", "指定配置版本号")
   .option("-v, --packageVersion", "显示本工具版本号")
   .on("--help", () => {
@@ -39,6 +41,8 @@ if (program.path) {
 } else if (program.configVersion) {
   let version = program.configVersion;
   addConfig(null, null, version);
+} else if (program.update) {
+  updateConfig(program.update);
 }
 
 /**
@@ -104,6 +108,43 @@ async function addConfig(subDir, env, version) {
           let v = envs[i];
           await addEnv(space, app, server, v);
           await addVersion(space, app, server, v, version, data);
+        }
+      }
+    }
+  }
+}
+
+/**
+ *
+ * @param {string} subDir
+ * @param {string} env
+ * @param {string} version
+ */
+async function updateConfig(subDir, env, version) {
+  subDir = subDir || "";
+  let dir = path.resolve(path.join($rootPath, subDir));
+  let node = {};
+  fileWalk(dir, node, node.children);
+
+  console.log("%o", node);
+
+  env = env || "local";
+  version = version || "1.0.0";
+
+  envs = ["local", "hz", "union", "pre", "prod"];
+
+  for (let space in node) {
+    let spaceObj = node[space];
+    for (let app in spaceObj) {
+      let appObj = spaceObj[app];
+      for (let json in appObj) {
+        if (json.indexOf(".json") < 0) continue;
+        let jsonPath = appObj[json];
+        let server = path.basename(json, ".json");
+        let data = fs.readFileSync(jsonPath, "utf8");
+        for (let i = 0; i < envs.length; i++) {
+          let v = envs[i];
+          await updateVersion(space, app, server, v, version, data);
         }
       }
     }

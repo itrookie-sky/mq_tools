@@ -1,6 +1,6 @@
 const { post } = require("../plugs/request");
 
-const url = "https://39.106.156.29:9000/config_server";
+const url = "http://39.106.156.29:9000/config_server";
 // const url = "https://192.168.1.170:9000/config_server";
 /**
  * 添加命名空间
@@ -61,9 +61,9 @@ function addEnv(space, app, server, env) {
  * @param {string} version
  * @param {string} data
  */
-function addVersion(space, app, server, env, version, data) {
+function addVersion(space, app, server, env, version, data, api) {
   return post(url, {
-    api: "add_version",
+    api: api || "add_version",
     awlArgs: {
       space: space,
       app: app,
@@ -75,8 +75,22 @@ function addVersion(space, app, server, env, version, data) {
   });
 }
 
+/**
+ * 更新版本 version
+ * @param {string} space
+ * @param {string} app
+ * @param {string} server
+ * @param {string} env
+ * @param {string} version
+ * @param {string} data
+ */
+function updateVersion(space, app, server, env, version, data) {
+  return addVersion(space, app, server, env, version, data, "update_version");
+}
+
 exports.addNameSpace = addNameSpace;
 exports.addApp = addApp;
 exports.addServer = addServer;
 exports.addEnv = addEnv;
 exports.addVersion = addVersion;
+exports.updateVersion = updateVersion;

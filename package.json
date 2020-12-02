@@ -12,10 +12,12 @@
     "test": "node index.js -p ../mq_conf_test",
     "help": "node index.js --help",
     "release": "node index.js -p ../mq_config",
+    "update": "node index.js -up ../mq_conf_test",
     "ver": "node index.js -cv 1.0.0"
   },
   "keywords": [
-    "mq"
+    "mq",
+    "mq_tools"
   ],
   "license": "ISC",
   "bin": {

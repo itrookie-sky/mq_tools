@@ -38,7 +38,7 @@ function request(url, method = "POST", data = {}, headers) {
       method: method,
       headers: {
         Accept: "*/*",
-        "Content-Type": "application/json",
+        "Content-Type": "application/json; charset=UTF-8",
       },
     };
 
